@@ -1,19 +1,47 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <img src="./assets/huesic.png" />
+    <HelloWorld msg="Welcome to Huesic" />
+    <Song />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Axios from "axios";
+import HelloWorld from "./components/HelloWorld";
+import Song from "./components/Song";
 
 export default {
-  name: 'App',
+  name: "App",
+
   components: {
-    HelloWorld
-  }
-}
+    HelloWorld,
+    Song,
+  },
+
+  data: () => ({
+    //
+  }),
+
+  mounted: async function () {
+    const config = {
+      method: "post",
+      url: "https://accounts.spotify.com/api/token",
+      headers: {
+        Authorization:
+          "Basic ## insert auth token here ##",
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      data: "grant_type=client_credentials",
+    };
+
+    const tokenRequest = await Axios(config).catch((err) => {
+      console.log(err);
+    });
+    console.log(tokenRequest.data.access_token);
+    localStorage.setItem('user-token', tokenRequest.data.access_token);
+  },
+};
 </script>
 
 <style>
@@ -26,3 +54,4 @@ export default {
   margin-top: 60px;
 }
 </style>
+
